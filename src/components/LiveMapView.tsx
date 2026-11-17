@@ -98,6 +98,28 @@ export function LiveMapView({ initialCorridorId }: LiveMapViewProps) {
   );
   const coveredKm = Math.round(corridor.distanceKm * progress);
 
+  const dynamicNextStop = useMemo(() => {
+    if (corridorStations.length < 2) return corridor.nextStop;
+    if (progress >= 0.98) {
+      const last = corridorStations[corridorStations.length - 1];
+      return `Llegada a ${last.city} completada`;
+    }
+    const stepCount = corridorStations.length - 1;
+    const nextIdx = Math.min(
+      corridorStations.length - 1,
+      Math.floor(progress * stepCount) + 1,
+    );
+    const nextStation = corridorStations[nextIdx];
+    const nextRatio = nextIdx / stepCount;
+    const minsToNext = Math.max(
+      1,
+      Math.round((nextRatio - progress) * corridor.totalMinutes),
+    );
+    return `${nextStation.city} (en ${formatDuration(minsToNext)})`;
+  }, [corridor, corridorStations, progress]);
+
+  const liveSpeedKmh = progress >= 0.99 || !isPlaying ? 0 : corridor.speedKmh;
+
   const handleCorridorChange = (id: string) => {
     const next = LIVE_CORRIDORS.find((c) => c.id === id);
     setSelectedCorridorId(id);
@@ -194,7 +216,7 @@ export function LiveMapView({ initialCorridorId }: LiveMapViewProps) {
               </defs>
               <rect width="500" height="470" fill="url(#valle-grid)" />
 
-              {/* Etiquetas geográficas del Valle del Cauca sin solapamiento */}
+              {/* Etiquetas geográficas del Valle del Cauca */}
               <text x="24" y="132" className="text-[11px] fill-slate-400 tracking-wide select-none">
                 Océano Pacífico
               </text>
@@ -314,6 +336,29 @@ export function LiveMapView({ initialCorridorId }: LiveMapViewProps) {
               </g>
             </svg>
           </div>
+
+          <div className="px-5 py-3 border-t border-slate-200 bg-white flex flex-wrap items-center gap-2 text-xs text-slate-500">
+            <span className="font-medium text-slate-700 mr-1">Paradas del corredor:</span>
+            {corridorStations.map((st, idx) => (
+              <button
+                key={st.id}
+                type="button"
+                onClick={() => {
+                  setSelectedStationId(st.id);
+                  if (corridorStations.length > 1) {
+                    setProgress(Number((idx / (corridorStations.length - 1)).toFixed(2)));
+                  }
+                }}
+                className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                  inspectedStation.id === st.id
+                    ? 'bg-blue-50 text-blue-700 font-medium'
+                    : 'hover:bg-slate-100 text-slate-600'
+                }`}
+              >
+                {st.city}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Panel derecho de rutas del Valle del Cauca */}
@@ -374,7 +419,7 @@ export function LiveMapView({ initialCorridorId }: LiveMapViewProps) {
               <div>
                 <span className="text-slate-500 block">Velocidad</span>
                 <span className="font-mono text-sm font-semibold text-slate-900 tabular-nums">
-                  {corridor.speedKmh} km/h
+                  {liveSpeedKmh} km/h
                 </span>
               </div>
             </div>
@@ -382,7 +427,7 @@ export function LiveMapView({ initialCorridorId }: LiveMapViewProps) {
             <div className="text-xs space-y-1.5">
               <p className="text-slate-700">
                 <span className="font-medium text-slate-900">Próximo punto:</span>{' '}
-                {corridor.nextStop}
+                {dynamicNextStop}
               </p>
               <p className="text-slate-600">{corridor.weatherNote}</p>
             </div>

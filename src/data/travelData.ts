@@ -696,7 +696,7 @@ export const NETWORK_STATIONS: NetworkStation[] = [
     code: 'BUN',
     name: 'Buenaventura · Malecón Bahía de la Cruz',
     city: 'Buenaventura',
-    x: 92,
+    x: 108,
     y: 274,
     type: 'meeting_point',
     activeLines: ['CAR-PAC1'],

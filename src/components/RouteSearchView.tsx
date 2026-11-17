@@ -70,6 +70,7 @@ export function RouteSearchView({
     const prevOrigin = origin;
     onOriginChange(destination);
     onDestinationChange(prevOrigin);
+    setExpandedRouteId(null);
   };
 
   const filteredRoutes = useMemo(() => {

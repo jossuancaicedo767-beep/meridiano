@@ -74,6 +74,7 @@ export default function App() {
     const preferred =
       corridorRoutes.find((r) => getRemainingSeats(r, bookings, travelDate) >= passengers) ??
       corridorRoutes.find((r) => getRemainingSeats(r, bookings, travelDate) > 0) ??
+      ROUTE_CATALOG.find((r) => getRemainingSeats(r, bookings, travelDate) > 0) ??
       ROUTE_CATALOG[0];
     setRouteForModal(preferred);
   };

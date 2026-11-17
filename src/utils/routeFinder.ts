@@ -68,8 +68,13 @@ function estimateRoadDistanceKm(origin: string, destination: string): number {
   if (a.isWestCoast || b.isWestCoast) {
     const other = a.isWestCoast ? b : a;
     if (other.kmFromCali <= 27) return 120 + Math.abs(other.kmFromCali);
-    // Desde Buga/Tuluá/Cartago hacia Buenaventura vía Loboguerrero - Media Canoa
     return Math.round(115 + Math.abs(other.kmFromCali - 72) * 0.95);
+  }
+
+  // Sevilla se conecta con la troncal del Valle en La Uribe (km 122) + 34 km de ascenso
+  if (a.isMountainEast || b.isMountainEast) {
+    const other = a.isMountainEast ? b : a;
+    return Math.max(34, Math.abs(other.kmFromCali - 122) + 34);
   }
 
   return Math.max(20, Math.abs(b.kmFromCali - a.kmFromCali));

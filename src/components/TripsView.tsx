@@ -17,6 +17,7 @@ function QrCodeSvg({ value }: { value: string }) {
   return (
     <svg
       viewBox="0 0 13 13"
+      shapeRendering="crispEdges"
       className="w-24 h-24 bg-white p-1.5 border border-slate-200 rounded-lg shrink-0"
       role="img"
       aria-label={`Código QR de abordaje ${value}`}
@@ -28,8 +29,8 @@ function QrCodeSvg({ value }: { value: string }) {
               key={`${r}-${c}`}
               x={c}
               y={r}
-              width={0.92}
-              height={0.92}
+              width={1}
+              height={1}
               fill="#0F172A"
             />
           ) : null,

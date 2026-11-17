@@ -131,10 +131,17 @@ export function BookingModal({
             </div>
           </div>
 
-          {isMoto && passengersCount > 1 && (
-            <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3.5 py-2.5">
-              En moto viaja 1 acompañante por vehículo; la reserva se ajustó a 1 cupo.
+          {availableSeats <= 0 ? (
+            <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3.5 py-2.5">
+              No quedan cupos disponibles en este vehículo para la fecha seleccionada.
             </p>
+          ) : (
+            isMoto &&
+            passengersCount > 1 && (
+              <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3.5 py-2.5">
+                En moto viaja 1 acompañante por vehículo; la reserva se ajustó a 1 cupo.
+              </p>
+            )
           )}
 
           <div>
@@ -148,6 +155,7 @@ export function BookingModal({
               id="passenger-name"
               type="text"
               required
+              minLength={2}
               value={passengerName}
               onChange={(e) => setPassengerName(e.target.value)}
               placeholder="Nombre completo del viajero"
@@ -245,7 +253,12 @@ export function BookingModal({
             </button>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 transition-colors cursor-pointer"
+              disabled={availableSeats <= 0}
+              className={`inline-flex items-center gap-2 px-5 py-2 text-sm font-medium rounded-lg transition-colors ${
+                availableSeats > 0
+                  ? 'text-white bg-blue-700 hover:bg-blue-800 cursor-pointer'
+                  : 'text-slate-400 bg-slate-100 border border-slate-200 cursor-not-allowed'
+              }`}
             >
               <Check className="w-4 h-4" />
               Confirmar reserva
