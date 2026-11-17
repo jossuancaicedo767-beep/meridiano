@@ -1,0 +1,6 @@
+{
+  "name": "Meridiano — Viajes y Transporte Multimodal",
+  "description": "Plataforma de búsqueda multimodal, gestión de itinerarios, seguimiento de rutas en vivo y arquitectura modular para aplicaciones de viajes y transporte.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
